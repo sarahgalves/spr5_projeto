@@ -23,7 +23,49 @@ if hist_button: # se o botão for clicado
     fig_plotly = px.histogram(filtered_data, x='price', nbins=50, 
                               title='Distribuição de Preços (sem top 5%)')
     #organiza layout
-    fig_plotly.update_layout(xaxis_title='Preço', yaxis_title='Frequência')
+    fig_plotly.update_layout(xaxis_title='Preço', yaxis_title='Quantidade', template="plotly_white")
+    fig_plotly.update_xaxes(showgrid=True)  # linhas verticais
+    fig_plotly.update_yaxes(showgrid=True)  # linhas horizontais
 
     st.plotly_chart(fig_plotly, use_container_width=True)
-    
+
+scatt_button = st.button('Dias vs Preço')
+
+if scatt_button:
+    car_data['condition'] = car_data['condition'].map({
+    "good": "Bom",
+    "like new": "Quase Novo",
+    "fair": "Justo",
+    "excellent": "Excelente",
+    "salvage": "Batido",
+    "new": "Novo"
+    })
+    graph = px.scatter(
+    car_data,
+    x="odometer",
+    y="price",
+    #color recebe o nome de uma coluna do DataFrame (numérica ou categórica)
+    #Plotly automáticamente atribui cores diferentes para cada valor dessa coluna
+    color="condition",  # legenda automática
+    title="Preço vs Odometro vs Condição",
+    labels={
+        "odometer": "Odometro (milhas)",
+        "price": "Preço ($)",
+        "condition": "Condição"
+    },
+    hover_data=["model", "model_year"],  # info extra ao passar o mouse
+    )
+
+    # Ajustes de layout
+    graph.update_layout(
+        title={
+            "x": 0.5,  # centraliza título
+            "xanchor": "center"
+        },
+        legend_title="Condição do carro",
+        template="plotly_white"
+    )
+    graph.update_yaxes(range=[0, None])  # 0 = mínimo, None = deixa o máximo automático
+
+    #graph.show() -->o .show() faz abrir em uma nova aba. por isso:
+    st.plotly_chart(graph, use_container_width=True)

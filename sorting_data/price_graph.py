@@ -22,6 +22,3 @@ ax.set_title('Distribuição de Preços excluindo os 5% mais caros')
 plt.xlabel('Preço')
 plt.ylabel('Frequência')
 plt.show()
-
-fig.savefig('price_graph.png')
-plt.close(fig)
