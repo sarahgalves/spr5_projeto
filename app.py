@@ -1,14 +1,12 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 import plotly.express as px
 
 car_data = pd.read_csv('./vehicles.csv') # lendo os dados
 
-st.header('testee')
+st.header('Análise de anúncios de vendas de carros')
 
-st.write('Ainda não é um aplicativo funcional. Em construção.')
+st.write('Escolha qual gráfico quer ver primeiro:')
 
 hist_button = st.button('Criar histograma') # criar um botão
         
@@ -27,11 +25,14 @@ if hist_button: # se o botão for clicado
     fig_plotly.update_xaxes(showgrid=True)  # linhas verticais
     fig_plotly.update_yaxes(showgrid=True)  # linhas horizontais
 
-    st.plotly_chart(fig_plotly, use_container_width=True)
+    st.plotly_chart(fig_plotly, width="stretch")
 
 scatt_button = st.button('Dias vs Preço')
 
 if scatt_button:
+    st.write("Criando um gráfico que correlaciona preço, milhagem e condição do carro.")
+    st.write("Atenção! Gráfico interativo. Clique na legenda para escolher se quer alguma condição específiva.")
+
     car_data['condition'] = car_data['condition'].map({
     "good": "Bom",
     "like new": "Quase Novo",
@@ -40,6 +41,7 @@ if scatt_button:
     "salvage": "Batido",
     "new": "Novo"
     })
+
     graph = px.scatter(
     car_data,
     x="odometer",
@@ -68,4 +70,4 @@ if scatt_button:
     graph.update_yaxes(range=[0, None])  # 0 = mínimo, None = deixa o máximo automático
 
     #graph.show() -->o .show() faz abrir em uma nova aba. por isso:
-    st.plotly_chart(graph, use_container_width=True)
+    st.plotly_chart(graph, width="stretch")
